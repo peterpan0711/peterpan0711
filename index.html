@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-TW"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ConnectMe | 探索新的友誼</title>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&amp;family=Quicksand:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary-fixed": "#002107",
+                    "outline": "#8d7169",
+                    "surface-container-highest": "#e4e2e1",
+                    "on-surface": "#1b1c1c",
+                    "surface-container-low": "#f6f3f2",
+                    "primary-container": "#ff7043",
+                    "tertiary-container": "#a09b94",
+                    "surface-container-high": "#eae7e7",
+                    "secondary-container": "#abf4ac",
+                    "secondary-fixed-dim": "#90d792",
+                    "outline-variant": "#e0bfb6",
+                    "tertiary": "#625e58",
+                    "surface-tint": "#ac3509",
+                    "surface-variant": "#e4e2e1",
+                    "surface-bright": "#fcf9f8",
+                    "background": "#fcf9f8",
+                    "inverse-primary": "#ffb59f",
+                    "on-tertiary-fixed-variant": "#4a4641",
+                    "tertiary-fixed-dim": "#ccc6be",
+                    "on-secondary-container": "#2e7238",
+                    "secondary-fixed": "#abf4ac",
+                    "on-error-container": "#93000a",
+                    "surface-dim": "#dcd9d9",
+                    "inverse-surface": "#303030",
+                    "primary-fixed": "#ffdbd0",
+                    "primary": "#ac3509",
+                    "surface": "#fcf9f8",
+                    "inverse-on-surface": "#f3f0f0",
+                    "on-primary-fixed-variant": "#852300",
+                    "tertiary-fixed": "#e8e1da",
+                    "on-tertiary-fixed": "#1e1b17",
+                    "on-secondary": "#ffffff",
+                    "on-background": "#1b1c1c",
+                    "on-tertiary-container": "#36332e",
+                    "error-container": "#ffdad6",
+                    "on-error": "#ffffff",
+                    "on-primary": "#ffffff",
+                    "on-surface-variant": "#59413a",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary-fixed": "#3a0a00",
+                    "on-primary-container": "#641800",
+                    "error": "#ba1a1a",
+                    "secondary": "#286b33",
+                    "on-secondary-fixed-variant": "#07521d",
+                    "surface-container": "#f0eded",
+                    "primary-fixed-dim": "#ffb59f"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "container-max": "1200px",
+                    "stack-gap-sm": "12px",
+                    "stack-gap-lg": "48px",
+                    "stack-gap-md": "24px",
+                    "unit": "8px",
+                    "margin-mobile": "16px",
+                    "gutter": "24px",
+                    "margin-desktop": "40px"
+            },
+            "fontFamily": {
+                    "display": ["Lexend"],
+                    "body-md": ["Quicksand"],
+                    "headline-lg-mobile": ["Lexend"],
+                    "body-lg": ["Quicksand"],
+                    "caption": ["Quicksand"],
+                    "label-md": ["Lexend"],
+                    "display-mobile": ["Lexend"],
+                    "headline-lg": ["Lexend"]
+            },
+            "fontSize": {
+                    "display": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "500"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "1.3", "fontWeight": "500"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "500"}],
+                    "caption": ["12px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                    "label-md": ["14px", {"lineHeight": "1.0", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                    "display-mobile": ["32px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "1.3", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #FFF8F0; /* Soft Cream from Style Guidance */
+            color: #1b1c1c;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hero-gradient {
+            background: radial-gradient(circle at top right, rgba(255, 112, 67, 0.05), transparent);
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md overflow-x-hidden">
+<!-- Top Navigation Bar -->
+<nav class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md shadow-[0px_4px_20px_rgba(255,112,67,0.08)]">
+<div class="flex justify-between items-center px-4 md:px-margin-desktop py-4 max-w-container-max mx-auto">
+<span class="font-display text-display-mobile md:text-headline-lg font-semibold text-primary">ConnectMe</span>
+<div class="hidden md:flex items-center space-x-8">
+<a class="font-display text-label-md text-primary font-bold border-b-2 border-primary pb-1" href="#">Home</a>
+<a class="font-display text-label-md text-on-surface-variant hover:text-primary transition-colors" href="#">Interests</a>
+<a class="font-display text-label-md text-on-surface-variant hover:text-primary transition-colors" href="#">Lists</a>
+<a class="font-display text-label-md text-on-surface-variant hover:text-primary transition-colors" href="#">Contact</a>
+</div>
+<button class="bg-primary text-on-primary font-display text-label-md px-6 py-3 rounded-full hover:scale-105 active:scale-95 transition-all duration-200">
+                Say Hello
+            </button>
+</div>
+</nav>
+<main class="pt-24">
+<!-- Hero Section -->
+<section class="relative px-4 md:px-margin-desktop py-stack-gap-lg max-w-container-max mx-auto hero-gradient overflow-hidden">
+<div class="flex flex-col md:flex-row items-center gap-stack-gap-md lg:gap-stack-gap-lg">
+<div class="flex-1 text-center md:text-left space-y-6">
+<h1 class="font-display text-display-mobile md:text-display text-primary leading-tight">
+                        嗨！我是 <span class="text-on-surface-variant">小明</span>，很高興遇見你！
+                    </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-xl mx-auto md:mx-0">
+                        我是一個熱愛生活與分享的人。目前正在尋找志同道合的朋友，一起探索城市、分享好電影、或者只是單純喝杯咖啡聊聊天。
+                    </p>
+<div class="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4">
+<button class="w-full sm:w-auto bg-primary text-on-primary font-display text-label-md px-10 py-5 rounded-full shadow-[0px_4px_20px_rgba(255,112,67,0.2)] hover:scale-105 active:scale-95 transition-all">
+                            Say Hello
+                        </button>
+<button class="w-full sm:w-auto font-display text-label-md text-primary px-8 py-4 rounded-full border-2 border-primary/20 hover:bg-primary/5 transition-colors">
+                            了解更多
+                        </button>
+</div>
+</div>
+<div class="flex-1 relative">
+<div class="w-64 h-64 md:w-96 md:h-96 rounded-lg overflow-hidden shadow-[0px_12px_32px_rgba(255,112,67,0.12)] border-8 border-white">
+<img alt="Profile photo" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida/AP1WRLujkSwcv1bc6h4yM8pn9MwFWt3ERs_DLRb2SGO8Oo89GF_9VbBGWndNxakA7FerNYUKdI-fWOqVVLVEIuW8FSAp56CAKZ92ggC8YHRSflyrCNcoriXtYWHKujW40YBhfVrdtZsX0jwDIN80ECi5mNJW_3PhdG5jZepidgU93d8wtvL_qrVD896hRGtXiEC8_WeERmwS8jWrYoMuqL8rC_2oqAM7M7doIuB_9kScjRm2y4Aa4GBGt0Kpqnc"/>
+</div>
+<div class="absolute -bottom-6 -left-6 bg-white p-4 rounded shadow-sm flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">location_on</span>
+<span class="font-label-md text-on-surface">台灣，台北市</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Interests Preview -->
+<section class="px-4 md:px-margin-desktop py-stack-gap-lg max-w-container-max mx-auto">
+<div class="flex flex-col items-center mb-12 text-center">
+<h2 class="font-display text-headline-lg-mobile md:text-headline-lg text-primary mb-4">我的生活碎片</h2>
+<p class="text-on-surface-variant">這些是我每天生活的動力來源</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Card 1 -->
+<div class="bg-surface-container-lowest p-6 rounded-lg shadow-[0px_4px_20px_rgba(255,112,67,0.08)] hover:shadow-[0px_12px_32px_rgba(255,112,67,0.12)] transition-shadow group">
+<div class="h-48 rounded-lg overflow-hidden mb-6">
+<img alt="Coffee" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida/AP1WRLtLQhbDbZKH3oklR3hJX8gtUyxbjd27wsQRS6Q4MffUX_KLM55Difj8DMw4iavv_AHYDCBMAnJDicx7yIP56dym20Mz8dQ1iqdfiH66n5SRCbjqjacXXaGsN6LFU7F3T-555BhBC_p7BqKuReyr81qIcoiS8dsWQdFl-QJDtRYyphjJEXYwa_1ueHSiCLQrTDm6Tjo0Hs5Z23M2LWzpqpsjh2V7jmB-S59UGy41VNiGdfTISRf4vK3fPT8"/>
+</div>
+<div class="flex items-center gap-2 mb-2">
+<span class="bg-secondary/10 text-secondary px-3 py-1 rounded-full text-caption">精品咖啡</span>
+</div>
+<h3 class="font-display text-headline-lg-mobile text-on-surface mb-2">Specialty Coffee</h3>
+<p class="text-on-surface-variant text-sm">每天早上從磨豆子的香氣開始，探索不同產區的風味層次是我的樂趣。</p>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-container-lowest p-6 rounded-lg shadow-[0px_4px_20px_rgba(255,112,67,0.08)] hover:shadow-[0px_12px_32px_rgba(255,112,67,0.12)] transition-shadow group">
+<div class="h-48 rounded-lg overflow-hidden mb-6">
+<img alt="Photography" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida/AP1WRLvoqitZ4sUKSSRlXZNkNaNImIpg5m551hWcuanD1p6WHgZJWCtuvjGyuxzkvj-kJ_MGAjCsssAlBoSi2XkCJBsfFbP8Ev80XGCQ2KPoEes6CjyKJcayS0mZfwJJCyMyvYncB30QiokxN6dvq05nv8PHS5YwW8ePtTMvzyo4-squJSMWFxdGrj-kAk5ihi4hXbqdJW6Q9Ue-zr8W0VlgwdQB5HX071ktNpqAyDuMTVJZObvf8T1N1DBr6g"/>
+</div>
+<div class="flex items-center gap-2 mb-2">
+<span class="bg-secondary/10 text-secondary px-3 py-1 rounded-full text-caption">底片攝影</span>
+</div>
+<h3 class="font-display text-headline-lg-mobile text-on-surface mb-2">Film Photography</h3>
+<p class="text-on-surface-variant text-sm">喜歡等待沖洗出的驚喜，用慢步調紀錄生活中那些一閃而過的細碎光影。</p>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface-container-lowest p-6 rounded-lg shadow-[0px_4px_20px_rgba(255,112,67,0.08)] hover:shadow-[0px_12px_32px_rgba(255,112,67,0.12)] transition-shadow group">
+<div class="h-48 rounded-lg overflow-hidden mb-6">
+<img alt="Urban exploration" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida/AP1WRLuKPLGTzHB7EVlEtwEs870PaYddaIecIjTPSkwAInaNwjK-xRsWbhtdXtIf28s34oOiHFQ0QRyBvvcTiuMkyRAfYvNck-EQt5Sra2WdLFL9VwYE8GhaXAoDlGP4BIaCF8EhSY3MB4Mc5-5Axx36GXzIJbrV34WgZRRtaKcvAlX0Q2sewVRXZQK1ZLo6F5nFK-sn0doAovq7in8EQA2EP3TTlIVkW-WCKz7Pca8FpG4A-I0P9eM3z-0SFw"/>
+</div>
+<div class="flex items-center gap-2 mb-2">
+<span class="bg-secondary/10 text-secondary px-3 py-1 rounded-full text-caption">城市探索</span>
+</div>
+<h3 class="font-display text-headline-lg-mobile text-on-surface mb-2">Urban Exploration</h3>
+<p class="text-on-surface-variant text-sm">走進沒去過的巷弄，尋找隱藏的小店或歷史遺跡，每一天都是小旅行。</p>
+</div>
+</div>
+</section>
+<!-- Icebreaker Section -->
+<section class="bg-surface-container-low py-stack-gap-lg">
+<div class="px-4 md:px-margin-desktop max-w-container-max mx-auto">
+<div class="text-center mb-12">
+<h2 class="font-display text-headline-lg-mobile md:text-headline-lg text-primary mb-2">跟我聊聊吧！</h2>
+<p class="text-on-surface-variant">這裡有一些開啟對話的小提示</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Q1 -->
+<div class="bg-white p-8 rounded-lg shadow-sm flex flex-col items-center text-center space-y-4 hover:translate-y-[-8px] transition-transform duration-300">
+<div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">auto_awesome</span>
+</div>
+<h4 class="font-display text-label-md text-on-surface">如果你能擁有一種超能力，會是什麼？</h4>
+<p class="text-on-surface-variant italic">「我想要瞬間移動，這樣就能隨時去冰島看極光了！」</p>
+</div>
+<!-- Q2 -->
+<div class="bg-white p-8 rounded-lg shadow-sm flex flex-col items-center text-center space-y-4 hover:translate-y-[-8px] transition-transform duration-300">
+<div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">movie</span>
+</div>
+<h4 class="font-display text-label-md text-on-surface">最近讓你最驚艷的電影？</h4>
+<p class="text-on-surface-variant italic">「剛看了 A24 的新片，那個色調和配樂真的太棒了...」</p>
+</div>
+<!-- Q3 -->
+<div class="bg-white p-8 rounded-lg shadow-sm flex flex-col items-center text-center space-y-4 hover:translate-y-[-8px] transition-transform duration-300">
+<div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">bakery_dining</span>
+</div>
+<h4 class="font-display text-label-md text-on-surface">最好吃的肉桂捲在哪裡？</h4>
+<p class="text-on-surface-variant italic">「我有私藏名單，只要你跟我打招呼，我就告訴你！」</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Social Proof / Connect -->
+<section class="px-4 md:px-margin-desktop py-stack-gap-lg max-w-container-max mx-auto text-center">
+<div class="bg-primary/5 p-12 rounded-xl border-2 border-dashed border-primary/20">
+<h2 class="font-display text-headline-lg-mobile md:text-headline-lg text-on-surface mb-6">想更了解我嗎？</h2>
+<p class="text-on-surface-variant mb-10 max-w-md mx-auto">除了這裡，你也可以在這些地方找到我的足跡，歡迎隨時打個招呼！</p>
+<div class="flex flex-wrap justify-center gap-6">
+<a class="flex items-center gap-3 bg-white px-6 py-4 rounded-full shadow-sm hover:shadow-md transition-shadow group" href="#">
+<span class="material-symbols-outlined text-primary">camera</span>
+<span class="font-label-md text-on-surface group-hover:text-primary transition-colors">Instagram: @ming_lifestyle</span>
+</a>
+<a class="flex items-center gap-3 bg-white px-6 py-4 rounded-full shadow-sm hover:shadow-md transition-shadow group" href="#">
+<span class="material-symbols-outlined text-primary">forum</span>
+<span class="font-label-md text-on-surface group-hover:text-primary transition-colors">Discord: Ming#1234</span>
+</a>
+</div>
+<div class="mt-12">
+<button class="bg-primary text-on-primary font-display text-label-md px-12 py-5 rounded-full hover:scale-105 active:scale-95 transition-all">
+                        立即傳送訊息
+                    </button>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-low mt-20">
+<div class="flex flex-col md:flex-row justify-between items-center p-stack-gap-lg max-w-container-max mx-auto">
+<div class="flex flex-col items-center md:items-start space-y-2 mb-8 md:mb-0">
+<span class="font-display text-headline-lg text-primary">ConnectMe</span>
+<p class="text-on-tertiary-fixed-variant text-sm">© 2024 Made with warmth &amp; optimism</p>
+</div>
+<div class="flex gap-8">
+<a class="font-body-md text-body-md text-on-tertiary-fixed-variant hover:text-primary transition-opacity hover:opacity-80" href="#">Privacy</a>
+<a class="font-body-md text-body-md text-on-tertiary-fixed-variant hover:text-primary transition-opacity hover:opacity-80" href="#">Terms</a>
+<a class="font-body-md text-body-md text-on-tertiary-fixed-variant hover:text-primary transition-opacity hover:opacity-80" href="#">Safety</a>
+</div>
+</div>
+</footer>
+<!-- Floating Action Button -->
+<button class="fixed bottom-8 right-8 w-16 h-16 bg-primary text-on-primary rounded-full shadow-lg flex items-center justify-center hover:scale-110 active:scale-90 transition-all z-40">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">chat</span>
+</button>
+<script>
+        // Simple micro-interaction for interest cards
+        document.querySelectorAll('.group').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                // Potential for adding JS animations if needed
+            });
+        });
+
+        // Sticky Header effect
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 20) {
+                nav.classList.add('py-2');
+                nav.classList.remove('py-4');
+            } else {
+                nav.classList.add('py-4');
+                nav.classList.remove('py-2');
+            }
+        });
+    </script>
+</body></html>
