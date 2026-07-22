@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
-"""易經專案網站建置腳本。
+"""易經文章 — 選用的本機預覽產生器。
 
 讀取 yijing/articles/ 底下的 Markdown 文章（含 front matter），
-產生靜態網站到 repo 根目錄的 docs/（供 GitHub Pages 發佈）。
+產生一個可在瀏覽器預覽的靜態網站到 docs/。
+
+注意：docs/ 只是預覽用，已被 .gitignore，**不是**你的正式網站
+（正式網站在你本機、獨立維護）。這支腳本只是讓你白天生成內容時，
+也能先看看渲染效果；晚上回家再由 CLI 把文章併入既有網站。
 
 用法：
     python3 yijing/build.py            # 建置
