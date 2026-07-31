@@ -1,3 +1,5 @@
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Go Healthy with Taiwan 2026 — Submit Now</title>
 <meta name="description" content="Five days left. Submit your health innovation proposal to Go Healthy with Taiwan 2026 by 5 August, 23:59 GMT+8. Three winners take US$30,000 each." />
 
@@ -552,6 +554,18 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
   to   { transform: none; opacity: 1; }
 }
 
+/* Drawn separator — a bullet character can go missing with a subset font or a
+   mis-guessed encoding; a styled span cannot. */
+.sep {
+  display: inline-block;
+  width: .3em; height: .3em;
+  margin-inline: .55em;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: .45;
+  vertical-align: .16em;
+}
+
 .hero__fine {
   margin: 0;
   font-weight: 700;
@@ -1032,7 +1046,7 @@ body.is-live .stack > * {
   <div class="pill" role="timer" aria-live="off">
     <span class="pill__dot pill__dot--beat" aria-hidden="true"></span>
     <span class="pill__cap">Closes in</span>
-    <span class="num" id="pill-clock">—</span>
+    <span class="num" id="pill-clock">--</span>
   </div>
 </nav>
 
@@ -1150,24 +1164,24 @@ body.is-live .stack > * {
 
         <span class="deadline">
           <span class="deadline__dot" aria-hidden="true"></span>
-          Submissions close 5 August 2026 · 23:59 GMT+8
+          Submissions close 5 August 2026, 23:59 GMT+8
         </span>
 
         <div class="clock" id="clock" role="timer" aria-live="off">
           <div class="clock__cell">
-            <span class="clock__val num" id="d">—</span>
+            <span class="clock__val num" id="d">00</span>
             <span class="clock__unit">Days</span>
           </div>
           <div class="clock__cell">
-            <span class="clock__val num" id="h">—</span>
+            <span class="clock__val num" id="h">00</span>
             <span class="clock__unit">Hours</span>
           </div>
           <div class="clock__cell">
-            <span class="clock__val num" id="m">—</span>
+            <span class="clock__val num" id="m">00</span>
             <span class="clock__unit">Mins</span>
           </div>
           <div class="clock__cell clock__cell--sec">
-            <span class="clock__val num" id="s">—</span>
+            <span class="clock__val num" id="s">00</span>
             <span class="clock__unit">Secs</span>
           </div>
         </div>
@@ -1177,7 +1191,8 @@ body.is-live .stack > * {
         </a>
 
         <p class="hero__fine">
-          Open to organisations worldwide · Proposals in English · No entry fee
+          Open to organisations worldwide<span class="sep" aria-hidden="true"></span>Proposals
+          in English<span class="sep" aria-hidden="true"></span>No entry fee
         </p>
       </div>
 
@@ -1422,7 +1437,7 @@ body.is-live .stack > * {
             <span class="phase__note">Press conference and Health AI Hub in Taipei.</span>
           </li>
           <li class="phase phase--now">
-            <span class="phase__date">5 Aug 2026 · 23:59</span>
+            <span class="phase__date">5 Aug 2026, 23:59</span>
             <span class="phase__name">Submissions close</span>
             <span class="phase__note">Taiwan time, GMT+8. You are here.</span>
           </li>
@@ -1437,7 +1452,7 @@ body.is-live .stack > * {
             <span class="phase__note">Travel to Taiwan arranged for finalists.</span>
           </li>
           <li class="phase">
-            <span class="phase__date">30 Nov – 5 Dec</span>
+            <span class="phase__date">30 Nov to 5 Dec</span>
             <span class="phase__name">Grand Finals, Taipei</span>
             <span class="phase__note">Live pitches and enterprise visits.</span>
           </li>
@@ -1542,7 +1557,7 @@ body.is-live .stack > * {
     <!-- ═══ CLOSING ═══ -->
     <section class="card close">
       <div class="close__in">
-        <p class="eyebrow rise">Deadline · 5 August 2026 · 23:59 GMT+8</p>
+        <p class="eyebrow rise">Deadline: 5 August 2026, 23:59 GMT+8</p>
         <h2 class="h2 rise d1" style="max-width:26ch">Someone is going to win this with your idea</h2>
         <p class="lead rise d2" style="max-width:46ch">
           Last year 638 teams from 55 countries decided it was worth the afternoon.
