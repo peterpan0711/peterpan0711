@@ -4,9 +4,9 @@
 <style>
 /* ─────────────────────────────────────────────────────────────
    GO HEALTHY WITH TAIWAN 2026 — FINAL CALL
-   Concept: the page is a live telemetry console — the instrument
-   shared by a bike computer, a performance monitor and a vitals
-   display. The deadline is the primary readout.
+   Concept: a diagnostic printout. The page is the readout,
+   printed on ECG paper — pale coral graph grid, ink traces,
+   crisp white panels. The intro is a monitor coming to life.
    ───────────────────────────────────────────────────────────── */
 
 @font-face {
@@ -34,26 +34,29 @@
 
 /* ── Tokens ──────────────────────────────────────────────── */
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 
-  --ground:   #070A12;
-  --ground-2: #0A0F1B;
-  --panel:    #0E1422;
-  --panel-2:  #121A2B;
-  --line:     #1B2438;
-  --line-2:   #26314A;
+  --ground:   #F8FAFB;
+  --panel:    #FFFFFF;
+  --panel-2:  #F2F6F8;
+  --line:     #E3E9ED;
+  --line-2:   #C6D2DA;
 
-  --ink:      #E6EBF7;
-  --ink-mid:  #A6B0C9;
-  --ink-dim:  #7F8AA6;
+  /* ECG paper grid */
+  --grid-fine: rgba(228, 0, 43, .038);
+  --grid-bold: rgba(228, 0, 43, .075);
 
-  --vital:    #00F0B5;
-  --vital-dk: #00A87E;
-  --volt:     #7C3AED;
-  --volt-lt:  #A97BF7;
-  --scan:     #3DBDF5;
+  /* Neutrals carry a blue-green bias toward the vital accent */
+  --ink:      #0E1A22;
+  --ink-mid:  #47585F;
+  --ink-dim:  #78888F;
+
+  --vital:    #00875A;
+  --vital-dp: #00694A;   /* small text / button ground — holds AA on white */
+  --scan:     #0A6FB5;
+  --volt:     #5B21B6;
   /* Reserved: --pulse marks the deadline and nothing else. */
-  --pulse:    #FF3B5C;
+  --pulse:    #E4002B;
 
   --ff-display: 'Saira', 'Arial Narrow', system-ui, sans-serif;
   --ff-body:    'Saira', system-ui, -apple-system, sans-serif;
@@ -65,24 +68,29 @@
   --fs-lead:    clamp(1.0625rem, 1.6vw, 1.25rem);
   --fs-h3:      clamp(1.1875rem, 2vw, 1.5rem);
   --fs-h2:      clamp(1.875rem, 4.2vw, 3rem);
-  --fs-display: clamp(2.5rem, 7.6vw, 5.75rem);
-  --fs-digit:   clamp(2.5rem, 9.4vw, 6.75rem);
+  --fs-display: clamp(2.4rem, 7vw, 5rem);
+  --fs-digit:   clamp(2.25rem, 8.4vw, 5.5rem);
 
   --s1: 0.5rem;  --s2: 0.75rem; --s3: 1rem;   --s4: 1.5rem;
   --s5: 2rem;    --s6: 3rem;    --s7: 4.5rem; --s8: 5.5rem;
 
   --bezel: 60px;
+  --band: min(18vh, 152px);
   --measure: 65ch;
   --shell: 1180px;
 
+  --shadow-1: 0 1px 2px rgba(14, 26, 34, .04), 0 4px 14px -6px rgba(14, 26, 34, .10);
+  --shadow-2: 0 2px 6px rgba(14, 26, 34, .06), 0 16px 36px -12px rgba(14, 26, 34, .18);
+
   --ease: cubic-bezier(.22, .61, .36, 1);
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
 }
 
-/* The design commits to one visual world: a lit instrument panel.
-   Keep tokens identical under both theme signals so the viewer's
-   toggle never half-inverts the console. */
-@media (prefers-color-scheme: light) { :root { color-scheme: dark; } }
-:root[data-theme="light"], :root[data-theme="dark"] { color-scheme: dark; }
+/* This design commits to one visual world: a printed diagnostic
+   sheet. Paper is white, so the tokens stay put under both theme
+   signals rather than half-inverting under the viewer's toggle. */
+@media (prefers-color-scheme: dark) { :root { color-scheme: light; } }
+:root[data-theme="light"], :root[data-theme="dark"] { color-scheme: light; }
 
 *, *::before, *::after { box-sizing: border-box; }
 
@@ -98,32 +106,25 @@ body {
   overflow-x: hidden;
 }
 
-/* Ambient console glow — fixed, behind everything */
+/* ECG graph paper — the ground the whole page is printed on.
+   Fades in as part of the intro. */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 0;
-  background:
-    radial-gradient(58% 42% at 14% -6%,  rgba(0, 240, 181, .11), transparent 62%),
-    radial-gradient(48% 40% at 92% 12%,  rgba(124, 58, 237, .13), transparent 64%),
-    radial-gradient(70% 50% at 50% 108%, rgba(124, 58, 237, .07), transparent 66%);
-}
-
-/* Faint instrument grid */
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
+  opacity: 0;
+  transition: opacity .9s var(--ease) .1s;
   background-image:
-    linear-gradient(to right,  rgba(38, 49, 74, .30) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(38, 49, 74, .30) 1px, transparent 1px);
-  background-size: 72px 72px;
-  mask-image: radial-gradient(130% 90% at 50% 0%, #000 12%, transparent 78%);
+    linear-gradient(to right,  var(--grid-bold) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-bold) 1px, transparent 1px),
+    linear-gradient(to right,  var(--grid-fine) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-fine) 1px, transparent 1px);
+  background-size: 50px 50px, 50px 50px, 10px 10px, 10px 10px;
 }
+body.is-live::before { opacity: 1; }
+html:not(.has-js) body::before { opacity: 1; }
 
 .shell {
   position: relative;
@@ -144,10 +145,9 @@ body::after {
   color: var(--ink-dim);
   margin: 0;
 }
-.label--vital { color: var(--vital); }
+.label--vital { color: var(--vital-dp); }
 .label--pulse { color: var(--pulse); }
 
-/* Channel label: a hairline that reads as an instrument tick */
 .channel {
   display: flex;
   align-items: center;
@@ -191,7 +191,7 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
   font-size: var(--fs-lead);
   line-height: 1.6;
   color: var(--ink-mid);
-  max-width: 54ch;
+  max-width: 50ch;
   margin: 0;
 }
 .prose { max-width: var(--measure); color: var(--ink-mid); }
@@ -207,8 +207,8 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
   top: 0;
   z-index: 100;
   padding: var(--s2) var(--s3);
-  background: var(--vital);
-  color: #04120D;
+  background: var(--ink);
+  color: #FFF;
   font-family: var(--ff-mono);
   font-size: var(--fs-small);
   text-decoration: none;
@@ -216,20 +216,21 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
 .skip:focus { left: var(--s3); top: var(--s3); }
 
 :focus-visible {
-  outline: 2px solid var(--vital);
+  outline: 2px solid var(--vital-dp);
   outline-offset: 3px;
   border-radius: 2px;
 }
 
 /* ── Buttons ────────────────────────────────────────────── */
 .btn {
-  --btn-bg: var(--vital);
-  --btn-fg: #04120D;
+  --btn-bg: var(--vital-dp);
+  --btn-fg: #FFFFFF;
+  --btn-bd: var(--vital-dp);
   display: inline-flex;
   align-items: center;
   gap: var(--s2);
   padding: 0.9rem 1.6rem;
-  border: 1px solid var(--btn-bg);
+  border: 1px solid var(--btn-bd);
   background: var(--btn-bg);
   color: var(--btn-fg);
   font-family: var(--ff-mono);
@@ -243,27 +244,26 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
 }
 .btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 28px -8px rgba(0, 240, 181, .55);
+  background: #005A3F;
+  box-shadow: 0 10px 24px -10px rgba(0, 105, 74, .6);
 }
 .btn__arrow { transition: transform .18s var(--ease); }
 .btn:hover .btn__arrow { transform: translateX(3px); }
 
-/* Sits over the live trace, so it needs its own ground to stay legible. */
 .btn--ghost {
-  --btn-bg: rgba(10, 15, 27, .86);
+  --btn-bg: var(--panel);
   --btn-fg: var(--ink);
-  border-color: var(--line-2);
-  backdrop-filter: blur(3px);
+  --btn-bd: var(--line-2);
 }
 .btn--ghost:hover {
+  background: var(--panel);
   border-color: var(--ink-dim);
-  box-shadow: none;
-  background: rgba(230, 235, 247, .04);
+  box-shadow: var(--shadow-1);
 }
 
 .btn--sm { flex: none; padding: 0.6rem 1.05rem; font-size: var(--fs-label); }
 
-/* ── Bezel (fixed console frame) ────────────────────────── */
+/* ── Bezel ──────────────────────────────────────────────── */
 .bezel {
   position: fixed;
   inset: 0 0 auto;
@@ -271,7 +271,7 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
   height: var(--bezel);
   display: flex;
   align-items: center;
-  background: rgba(7, 10, 18, .86);
+  background: rgba(248, 250, 251, .88);
   backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--line);
 }
@@ -312,7 +312,6 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
 
 .bezel__gap { flex: 1; }
 
-/* Compact readout in the bezel — must never wrap out of the 60px bar */
 .mini {
   display: flex;
   flex: none;
@@ -331,7 +330,6 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
   width: 7px; height: 7px;
   border-radius: 50%;
   background: var(--pulse);
-  box-shadow: 0 0 0 0 rgba(255, 59, 92, .6);
   animation: beat 1s var(--ease) infinite;
 }
 .mini__cap {
@@ -342,9 +340,9 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
   color: var(--ink-dim);
 }
 @keyframes beat {
-  0%   { box-shadow: 0 0 0 0   rgba(255, 59, 92, .55); }
-  70%  { box-shadow: 0 0 0 9px rgba(255, 59, 92, 0); }
-  100% { box-shadow: 0 0 0 0   rgba(255, 59, 92, 0); }
+  0%   { box-shadow: 0 0 0 0   rgba(228, 0, 43, .40); }
+  70%  { box-shadow: 0 0 0 9px rgba(228, 0, 43, 0); }
+  100% { box-shadow: 0 0 0 0   rgba(228, 0, 43, 0); }
 }
 
 /* ── Hero ───────────────────────────────────────────────── */
@@ -352,7 +350,8 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
   position: relative;
   min-height: min(100svh, 900px);
   padding-top: calc(var(--bezel) + var(--s6));
-  padding-bottom: var(--s6);
+  /* keeps hero copy clear of the trace band pinned to the foot */
+  padding-bottom: calc(var(--band) * .82);
   display: flex;
   align-items: center;
   overflow: hidden;
@@ -361,9 +360,8 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
   position: absolute;
   inset: auto 0 0;
   width: 100%;
-  height: min(34vh, 260px);
+  height: var(--band);
   z-index: 0;
-  opacity: .85;
   pointer-events: none;
   mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
 }
@@ -386,7 +384,7 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
   gap: .5rem;
   padding: .34rem .7rem;
   border: 1px solid var(--line-2);
-  background: rgba(18, 26, 43, .7);
+  background: var(--panel);
   font-family: var(--ff-mono);
   font-weight: 500;
   font-size: var(--fs-label);
@@ -395,15 +393,15 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
   color: var(--ink-mid);
 }
 .tag--live {
-  border-color: rgba(255, 59, 92, .45);
+  border-color: rgba(228, 0, 43, .38);
   color: var(--pulse);
-  background: rgba(255, 59, 92, .07);
+  background: rgba(228, 0, 43, .04);
 }
 
 .hero__title .display { display: block; }
 .hero__title .display--alt {
   color: transparent;
-  -webkit-text-stroke: 1px var(--vital);
+  -webkit-text-stroke: 1.5px var(--vital);
 }
 
 .hero__cta {
@@ -426,7 +424,8 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   border: 1px solid var(--line);
-  background: linear-gradient(180deg, rgba(18, 26, 43, .82), rgba(10, 15, 27, .82));
+  background: var(--panel);
+  box-shadow: var(--shadow-1);
   max-width: 42rem;
 }
 .readout__cell {
@@ -445,7 +444,6 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
   letter-spacing: -.03em;
   font-variant-numeric: tabular-nums;
   color: var(--ink);
-  text-shadow: 0 0 26px rgba(0, 240, 181, .34);
 }
 .readout__cell--sec .readout__val { color: var(--vital); }
 .readout__unit {
@@ -456,9 +454,10 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
   text-transform: uppercase;
   color: var(--ink-dim);
 }
-.readout.is-closed { border-color: rgba(255, 59, 92, .4); }
-.readout.is-closed .readout__val { color: var(--pulse); text-shadow: none; }
+.readout.is-closed { border-color: rgba(228, 0, 43, .4); }
+.readout.is-closed .readout__val { color: var(--pulse); }
 
+/* Instrument settling on each second */
 .tick { animation: tick .26s var(--ease); }
 @keyframes tick {
   0%   { opacity: .72; transform: translateY(-2px); }
@@ -485,6 +484,7 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
   grid-template-columns: repeat(auto-fit, minmax(min(13rem, 100%), 1fr));
   border: 1px solid var(--line);
   background: var(--panel);
+  box-shadow: var(--shadow-1);
 }
 .stake {
   display: grid;
@@ -502,7 +502,7 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
   font-variant-numeric: tabular-nums;
   color: var(--vital);
 }
-.stake--volt .stake__val { color: var(--volt-lt); }
+.stake--volt .stake__val { color: var(--volt); }
 .stake__key {
   font-family: var(--ff-mono);
   font-weight: 500;
@@ -528,24 +528,25 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
   padding: var(--s5) var(--s4) var(--s4);
   border: 1px solid var(--line);
   background: var(--panel);
-  transition: transform .22s var(--ease), border-color .22s var(--ease), background-color .22s var(--ease);
+  transition: transform .24s var(--ease), border-color .24s var(--ease), box-shadow .24s var(--ease);
 }
 .sector::before {
   content: "";
   position: absolute;
   inset: -1px -1px auto;
-  height: 2px;
+  height: 3px;
   background: var(--sig);
-  opacity: .5;
-  transition: opacity .22s var(--ease);
+  transform: scaleX(.24);
+  transform-origin: left;
+  transition: transform .34s var(--ease-out);
 }
 .sector:hover {
   transform: translateY(-4px);
   border-color: var(--line-2);
-  background: var(--panel-2);
+  box-shadow: var(--shadow-2);
 }
-.sector:hover::before { opacity: 1; }
-.sector--volt { --sig: var(--volt-lt); }
+.sector:hover::before { transform: scaleX(1); }
+.sector--volt { --sig: var(--volt); }
 .sector--scan { --sig: var(--scan); }
 
 .sector__glyph { display: block; width: 40px; height: 40px; color: var(--sig); }
@@ -572,7 +573,9 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
   font-size: var(--fs-label);
   letter-spacing: .05em;
   color: var(--ink-mid);
+  transition: border-color .2s var(--ease), color .2s var(--ease);
 }
+.sector:hover .uses li { border-color: var(--sig); color: var(--ink); }
 
 /* ── Steps (a real sequence — numbering is earned) ──────── */
 .steps {
@@ -591,16 +594,18 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
   align-content: start;
   padding: var(--s4);
   border: 1px solid var(--line);
-  border-top: 2px solid var(--volt);
+  border-top: 3px solid var(--volt);
   background: var(--panel);
+  transition: box-shadow .24s var(--ease), transform .24s var(--ease);
 }
+.step:hover { transform: translateY(-3px); box-shadow: var(--shadow-2); }
 .step::before {
   content: counter(step, decimal-leading-zero);
   font-family: var(--ff-mono);
   font-weight: 600;
   font-size: var(--fs-small);
   letter-spacing: .1em;
-  color: var(--volt-lt);
+  color: var(--volt);
 }
 .step p { margin: 0; font-size: var(--fs-small); color: var(--ink-mid); }
 
@@ -622,18 +627,7 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
   background: var(--panel);
   position: relative;
 }
-.rung__stage {
-  display: grid;
-  gap: .2rem;
-}
-.rung__role {
-  font-family: var(--ff-mono);
-  font-weight: 600;
-  font-size: var(--fs-label);
-  letter-spacing: .13em;
-  text-transform: uppercase;
-  color: var(--ink-mid);
-}
+.rung__stage { display: grid; gap: .2rem; }
 .rung__count {
   font-family: var(--ff-display);
   font-stretch: 74%;
@@ -642,6 +636,14 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
   line-height: 1;
   font-variant-numeric: tabular-nums;
   color: var(--ink);
+}
+.rung__role {
+  font-family: var(--ff-mono);
+  font-weight: 600;
+  font-size: var(--fs-label);
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--ink-mid);
 }
 .rung__when {
   font-family: var(--ff-mono);
@@ -652,14 +654,18 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
 }
 .rung__gets { display: grid; gap: var(--s2); }
 .rung__gets p { margin: 0; font-size: var(--fs-small); color: var(--ink-mid); }
-.rung--top { border-color: rgba(0, 240, 181, .4); background: rgba(0, 240, 181, .05); }
+.rung--top {
+  border-color: rgba(0, 135, 90, .45);
+  background: rgba(0, 135, 90, .04);
+  box-shadow: var(--shadow-1);
+}
 .rung--top .rung__count { color: var(--vital); }
 .prize {
   font-family: var(--ff-mono);
   font-weight: 600;
   font-size: 1.0625rem;
   letter-spacing: .02em;
-  color: var(--vital);
+  color: var(--vital-dp);
   font-variant-numeric: tabular-nums;
 }
 
@@ -703,12 +709,12 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
 .phase__name { font-weight: 600; font-size: 0.9375rem; line-height: 1.3; color: var(--ink-mid); }
 .phase__note { font-size: var(--fs-small); color: var(--ink-dim); }
 
-.phase--now::before { background: var(--pulse); box-shadow: 0 0 0 5px rgba(255, 59, 92, .16); }
+.phase--past::before { background: var(--vital); }
+.phase--past .phase__date { color: var(--vital-dp); }
+
+.phase--now::before { background: var(--pulse); box-shadow: 0 0 0 5px rgba(228, 0, 43, .13); }
 .phase--now .phase__date { color: var(--pulse); }
 .phase--now .phase__name { color: var(--ink); }
-
-.phase--past::before { background: var(--vital-dk); }
-.phase--past .phase__date { color: var(--vital-dk); }
 
 /* ── Two-column split ───────────────────────────────────── */
 .split {
@@ -749,16 +755,16 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
   cursor: pointer;
   transition: color .16s var(--ease);
 }
-.qa__q:hover { color: var(--vital); }
+.qa__q:hover { color: var(--vital-dp); }
 .qa__sign {
   flex: none;
   font-family: var(--ff-mono);
   font-weight: 500;
   font-size: 1.125rem;
   color: var(--ink-dim);
-  transition: transform .22s var(--ease), color .22s var(--ease);
+  transition: transform .26s var(--ease-out), color .22s var(--ease);
 }
-.qa__q[aria-expanded="true"] .qa__sign { transform: rotate(45deg); color: var(--vital); }
+.qa__q[aria-expanded="true"] .qa__sign { transform: rotate(45deg); color: var(--vital-dp); }
 .qa__a {
   max-width: var(--measure);
   padding: 0 0 var(--s4);
@@ -792,7 +798,7 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
 .foot__org { display: grid; gap: var(--s1); }
 .foot__org strong { color: var(--ink-mid); font-weight: 600; }
 .foot a { color: var(--ink-mid); text-decoration-color: var(--line-2); text-underline-offset: 3px; }
-.foot a:hover { color: var(--vital); text-decoration-color: var(--vital); }
+.foot a:hover { color: var(--vital-dp); text-decoration-color: var(--vital-dp); }
 .foot__note {
   padding-top: var(--s4);
   border-top: 1px solid var(--line);
@@ -804,34 +810,142 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
   max-width: 78ch;
 }
 
-/* ── Load + scroll choreography ─────────────────────────────
-   Hidden states are scoped to .has-js, which the script sets on
-   <html> before anything else. Without JS every block renders
-   plainly visible rather than staying at opacity 0.
+/* ─────────────────────────────────────────────────────────
+   INTRO — a monitor coming to life.
+   Flatline draws in, one beat runs through it, the sheet
+   wipes up to reveal the page.
    ───────────────────────────────────────────────────────── */
-.has-js .rise { opacity: 0; transform: translateY(18px); }
+.intro {
+  /* Hidden by default: with no scripting nothing would ever dismiss it,
+     and it would sit over the whole page. Only .has-js stages it. */
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  place-items: center;
+  background: var(--ground);
+  clip-path: inset(0 0 0 0);
+  transition: clip-path .72s var(--ease-out);
+}
+.intro__in {
+  display: grid;
+  gap: var(--s4);
+  justify-items: center;
+  width: min(72vw, 620px);
+}
+.intro__label {
+  margin: 0;
+  font-family: var(--ff-mono);
+  font-weight: 500;
+  font-size: var(--fs-label);
+  letter-spacing: .34em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  opacity: 0;
+  transition: opacity .3s var(--ease);
+}
+.intro.is-armed .intro__label { opacity: 1; }
+.intro.is-hushed .intro__label { opacity: 0; }
+
+.intro__trace { display: block; width: 100%; height: 120px; overflow: visible; }
+.intro__path {
+  fill: none;
+  stroke: var(--vital);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+}
+.intro.is-armed .intro__path {
+  animation: draw 1.05s cubic-bezier(.34, .5, .3, 1) forwards;
+}
+@keyframes draw { to { stroke-dashoffset: 0; } }
+
+.intro__lead {
+  fill: var(--vital);
+  opacity: 0;
+}
+.intro.is-armed .intro__lead { animation: leadOn 1.05s linear forwards; }
+@keyframes leadOn {
+  0%   { opacity: 0; }
+  6%   { opacity: 1; }
+  92%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.has-js .intro { display: grid; }
+.intro.is-out { clip-path: inset(0 0 100% 0); }
+.has-js .intro.is-done { display: none; }
+
+.intro__skip {
+  position: absolute;
+  right: var(--s4);
+  bottom: var(--s4);
+  padding: .4rem .7rem;
+  border: 1px solid var(--line-2);
+  background: transparent;
+  color: var(--ink-dim);
+  font-family: var(--ff-mono);
+  font-size: var(--fs-label);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.intro__skip:hover { color: var(--ink); border-color: var(--ink-dim); }
+
+/* ── Entrance choreography ──────────────────────────────────
+   Hidden states are scoped to .has-js, set on <html> before
+   anything else, so the page renders plainly without scripting.
+   ───────────────────────────────────────────────────────── */
+.has-js .bezel {
+  transform: translateY(-100%);
+  transition: transform .62s var(--ease-out);
+}
+.has-js body.is-live .bezel, body.is-live .bezel { transform: none; }
+
+/* Headline wipes up line by line */
+.has-js .hero__title .display {
+  clip-path: inset(0 0 105% 0);
+  transition: clip-path .78s var(--ease-out);
+}
+.has-js body.is-live .hero__title .display:nth-child(1) { clip-path: inset(0 0 -8% 0); transition-delay: .06s; }
+.has-js body.is-live .hero__title .display:nth-child(2) { clip-path: inset(0 0 -8% 0); transition-delay: .20s; }
+
+.has-js .hero__eyebrow,
+.has-js .hero .lead,
+.has-js .hero__cta,
+.has-js .hero__fine,
+.has-js .hero > .shell .readout,
+.has-js .hero > .shell .label {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity .6s var(--ease), transform .6s var(--ease);
+}
+.has-js body.is-live .hero__eyebrow            { opacity: 1; transform: none; transition-delay: .02s; }
+.has-js body.is-live .hero .lead               { opacity: 1; transform: none; transition-delay: .34s; }
+.has-js body.is-live .hero > .shell .label     { opacity: 1; transform: none; transition-delay: .42s; }
+.has-js body.is-live .hero > .shell .readout   { opacity: 1; transform: none; transition-delay: .48s; }
+.has-js body.is-live .hero__cta                { opacity: 1; transform: none; transition-delay: .62s; }
+.has-js body.is-live .hero__fine               { opacity: 1; transform: none; transition-delay: .70s; }
+
+/* Scroll transitions for the rest of the page */
+.has-js .rise { opacity: 0; transform: translateY(20px); }
 .has-js .rise.is-in {
   opacity: 1;
   transform: none;
-  transition: opacity .6s var(--ease), transform .6s var(--ease);
+  transition: opacity .66s var(--ease-out), transform .66s var(--ease-out);
 }
-.has-js .rise.is-in.d1 { transition-delay: .07s; }
-.has-js .rise.is-in.d2 { transition-delay: .14s; }
-.has-js .rise.is-in.d3 { transition-delay: .21s; }
+.has-js .rise.is-in.d1 { transition-delay: .08s; }
+.has-js .rise.is-in.d2 { transition-delay: .16s; }
+.has-js .rise.is-in.d3 { transition-delay: .24s; }
 
-/* Hero load sequence */
-.has-js .boot > * { opacity: 0; transform: translateY(14px); }
-.has-js .boot.is-booted > * {
-  opacity: 1;
-  transform: none;
-  transition: opacity .55s var(--ease), transform .55s var(--ease);
+/* Section headings wipe rather than fade, echoing the hero */
+.has-js .sec__head .h2, .has-js .close .h2 {
+  clip-path: inset(0 0 105% 0);
+  transition: clip-path .72s var(--ease-out) .06s;
 }
-.has-js .boot.is-booted > *:nth-child(1) { transition-delay: .05s; }
-.has-js .boot.is-booted > *:nth-child(2) { transition-delay: .16s; }
-.has-js .boot.is-booted > *:nth-child(3) { transition-delay: .27s; }
-.has-js .boot.is-booted > *:nth-child(4) { transition-delay: .40s; }
-.has-js .boot.is-booted > *:nth-child(5) { transition-delay: .50s; }
-.has-js .boot.is-booted > *:nth-child(6) { transition-delay: .58s; }
+.has-js .rise.is-in .h2 { clip-path: inset(0 0 -8% 0); }
 
 /* ── Narrow screens ─────────────────────────────────────── */
 @media (max-width: 760px) {
@@ -843,6 +957,7 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
   .stake:last-child { border-bottom: 0; }
   .rung { grid-template-columns: 1fr; gap: var(--s3); }
   .mini__cap { display: none; }
+  .intro__trace { height: 90px; }
 }
 @media (max-width: 560px) {
   .bezel__in { gap: var(--s2); padding-inline: var(--s3); }
@@ -851,6 +966,7 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
   .mark { font-size: 1rem; }
   .mini { font-size: var(--fs-label); gap: .4rem; }
   .btn--sm { padding: 0.55rem 0.8rem; }
+  .intro__label { letter-spacing: .2em; }
 }
 
 /* ── Reduced motion ─────────────────────────────────────── */
@@ -860,12 +976,30 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
     animation-iteration-count: 1 !important;
     transition-duration: .001ms !important;
   }
-  .has-js .rise, .has-js .boot > * { opacity: 1; transform: none; }
+  .has-js .rise, .has-js .bezel { opacity: 1; transform: none; }
+  .has-js .hero__eyebrow, .has-js .hero .lead, .has-js .hero__cta,
+  .has-js .hero__fine, .has-js .hero > .shell .readout,
+  .has-js .hero > .shell .label { opacity: 1; transform: none; }
+  .has-js .hero__title .display,
+  .has-js .sec__head .h2, .has-js .close .h2 { clip-path: none; }
   .mini__dot { animation: none; }
+  .has-js .intro { display: none; }
 }
 </style>
 
 <a class="skip" href="#main">Skip to content</a>
+
+<div class="intro" id="intro">
+  <div class="intro__in">
+    <p class="intro__label">Go Healthy with Taiwan 2026</p>
+    <svg class="intro__trace" viewBox="0 0 600 120" preserveAspectRatio="none" aria-hidden="true">
+      <path class="intro__path" pathLength="1000"
+            d="M0 78 H236 L250 70 L262 78 L276 78 L286 30 L298 112 L310 56 L322 78 H352 L366 60 L380 78 H600" />
+      <circle class="intro__lead" cx="600" cy="78" r="4" />
+    </svg>
+  </div>
+  <button class="intro__skip" type="button" id="intro-skip">Skip</button>
+</div>
 
 <header class="bezel">
   <div class="bezel__in">
@@ -891,7 +1025,7 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
   <section class="hero" id="top">
     <canvas class="hero__trace" id="trace" aria-hidden="true"></canvas>
     <div class="shell">
-      <div class="hero__in boot" id="boot">
+      <div class="hero__in">
 
         <div class="hero__eyebrow">
           <span class="tag tag--live">
@@ -913,25 +1047,24 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
           industry behind your idea.
         </p>
 
-        <div>
-          <p class="label label--pulse channel">Time remaining to submit</p>
-          <div class="readout" id="readout" role="timer" aria-live="off">
-            <div class="readout__cell">
-              <span class="readout__val num" id="d">—</span>
-              <span class="readout__unit">Days</span>
-            </div>
-            <div class="readout__cell">
-              <span class="readout__val num" id="h">—</span>
-              <span class="readout__unit">Hours</span>
-            </div>
-            <div class="readout__cell">
-              <span class="readout__val num" id="m">—</span>
-              <span class="readout__unit">Minutes</span>
-            </div>
-            <div class="readout__cell readout__cell--sec">
-              <span class="readout__val num" id="s">—</span>
-              <span class="readout__unit">Seconds</span>
-            </div>
+        <p class="label label--pulse channel">Time remaining to submit</p>
+
+        <div class="readout" id="readout" role="timer" aria-live="off">
+          <div class="readout__cell">
+            <span class="readout__val num" id="d">—</span>
+            <span class="readout__unit">Days</span>
+          </div>
+          <div class="readout__cell">
+            <span class="readout__val num" id="h">—</span>
+            <span class="readout__unit">Hours</span>
+          </div>
+          <div class="readout__cell">
+            <span class="readout__val num" id="m">—</span>
+            <span class="readout__unit">Minutes</span>
+          </div>
+          <div class="readout__cell readout__cell--sec">
+            <span class="readout__val num" id="s">—</span>
+            <span class="readout__unit">Seconds</span>
           </div>
         </div>
 
@@ -1318,7 +1451,9 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
     <div class="shell">
       <div class="close__in">
         <p class="label label--pulse rise">Deadline · 5 August 2026 · 23:59 GMT+8</p>
-        <h2 class="h2 rise d1" style="max-width:24ch">Someone is going to win this with your idea</h2>
+        <div class="rise d1">
+          <h2 class="h2" style="max-width:24ch; margin-inline:auto">Someone is going to win this with your idea</h2>
+        </div>
         <p class="lead rise d2">
           Last year 638 teams from 55 countries decided it was worth the afternoon.
           Three of them left with US$30,000 and a Taiwanese industry behind them.
@@ -1352,7 +1487,7 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
 (function () {
   "use strict";
 
-  /* Arm the reveal styles only once we know scripting is available. */
+  /* Arm the entrance styles only once we know scripting is available. */
   document.documentElement.classList.add("has-js");
 
   var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -1368,6 +1503,7 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
   var readout = document.getElementById("readout");
   var lastSec = null;
   var closed = false;
+  var spinning = false;
 
   function pad(n) { return n < 10 ? "0" + n : String(n); }
 
@@ -1393,6 +1529,7 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
     var left = DEADLINE - Date.now();
 
     if (left <= 0) { closeOut(); return; }
+    if (spinning) { return; }
 
     var s = Math.floor(left / 1000);
     var days = Math.floor(s / 86400);
@@ -1414,11 +1551,33 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
     }
   }
 
+  /* The readout spins up like an instrument finding its value. */
+  function spinUp(done) {
+    if (reduced || closed) { done(); return; }
+    spinning = true;
+    var cells = [elD, elH, elM, elS];
+    var ticks = 0;
+    var iv = setInterval(function () {
+      ticks++;
+      cells.forEach(function (c) {
+        c.textContent = pad(Math.floor(Math.random() * 60));
+      });
+      if (ticks > 11) {
+        clearInterval(iv);
+        spinning = false;
+        render();
+        done();
+      }
+    }, 55);
+  }
+
   render();
   setInterval(render, 250);
 
-  /* ── Hero trace: composite ECG + cadence telemetry ────── */
+  /* ── Hero trace: ink on paper — ECG over pedalling cadence ── */
   var canvas = document.getElementById("trace");
+  var traceStart = function () {};
+
   if (canvas && canvas.getContext) {
     var ctx = canvas.getContext("2d");
     var w = 0, h = 0, dpr = 1;
@@ -1432,8 +1591,7 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
 
-    /* One heartbeat cycle, plus a slower pedalling cadence beneath it.
-       x runs 0..1 across a single beat. */
+    /* One heartbeat cycle; x runs 0..1 across a single beat. */
     function beat(x) {
       if (x < 0.10) { return 0; }
       if (x < 0.18) { return Math.sin((x - 0.10) / 0.08 * Math.PI) * 0.14; }   /* P */
@@ -1447,71 +1605,70 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
     }
 
     var t = 0;
+    var reveal = 0;   /* 0..1 — how much of the trace has been laid down */
 
     function draw() {
       ctx.clearRect(0, 0, w, h);
       if (w < 2) { return; }
 
-      var mid = h * 0.62;
-      var amp = Math.min(h * 0.34, 110);
+      var mid = h * 0.58;
+      var amp = Math.min(h * 0.28, 62);
       var beatW = Math.max(w * 0.24, 190);
       var step = 2;
+      var edge = w * reveal;
 
-      /* Cadence wave — the quieter, slower channel */
+      /* Cadence wave — the quieter channel, in pale blue ink */
       ctx.beginPath();
-      for (var cx = 0; cx <= w; cx += step) {
+      for (var cx = 0; cx <= edge; cx += step) {
         var cy = mid + Math.sin((cx / w) * Math.PI * 4 - t * 0.9) * (amp * 0.20)
                      + Math.sin((cx / w) * Math.PI * 9 + t * 0.5) * (amp * 0.07);
         if (cx === 0) { ctx.moveTo(cx, cy); } else { ctx.lineTo(cx, cy); }
       }
-      ctx.strokeStyle = "rgba(124, 58, 237, 0.42)";
+      ctx.strokeStyle = "rgba(10, 111, 181, 0.30)";
       ctx.lineWidth = 1.5;
       ctx.stroke();
 
-      /* Vital trace — the lead channel */
+      /* Vital trace — the lead channel, in green ink */
       var offset = (t * 62) % beatW;
       ctx.beginPath();
-      for (var x = 0; x <= w; x += step) {
+      for (var x = 0; x <= edge; x += step) {
         var phase = ((x + offset) % beatW) / beatW;
         var y = mid - beat(phase) * amp;
         if (x === 0) { ctx.moveTo(x, y); } else { ctx.lineTo(x, y); }
       }
-      ctx.strokeStyle = "rgba(0, 240, 181, 0.95)";
+      ctx.strokeStyle = "rgba(0, 135, 90, 0.85)";
       ctx.lineWidth = 2;
       ctx.lineJoin = "round";
-      ctx.shadowColor = "rgba(0, 240, 181, 0.75)";
-      ctx.shadowBlur = 16;
       ctx.stroke();
-      ctx.shadowBlur = 0;
 
       /* Leading marker, as on a live monitor */
-      var lp = ((w + offset) % beatW) / beatW;
-      var ly = mid - beat(lp) * amp;
-      ctx.beginPath();
-      ctx.arc(w - 1, ly, 3.2, 0, Math.PI * 2);
-      ctx.fillStyle = "#00F0B5";
-      ctx.shadowColor = "rgba(0, 240, 181, 0.9)";
-      ctx.shadowBlur = 14;
-      ctx.fill();
-      ctx.shadowBlur = 0;
+      if (edge > 4) {
+        var lp = ((edge + offset) % beatW) / beatW;
+        var ly = mid - beat(lp) * amp;
+        ctx.beginPath();
+        ctx.arc(edge, ly, 3.2, 0, Math.PI * 2);
+        ctx.fillStyle = "#00875A";
+        ctx.fill();
+      }
     }
 
     var raf = null;
     function loop() {
       t += 0.016;
+      if (reveal < 1) { reveal = Math.min(1, reveal + 0.022); }
       draw();
       raf = window.requestAnimationFrame(loop);
     }
 
-    function start() {
+    traceStart = function () {
       resize();
-      if (reduced) { t = 1.4; draw(); return; }
+      if (reduced) { t = 1.4; reveal = 1; draw(); return; }
       if (raf === null) { loop(); }
-    }
+    };
 
     window.addEventListener("resize", function () {
       resize();
-      if (reduced) { draw(); }
+      if (reduced || raf === null) { draw(); }
     });
 
     /* Stop the trace when the hero scrolls away */
@@ -1519,7 +1676,7 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
       new IntersectionObserver(function (entries) {
         entries.forEach(function (e) {
           if (e.isIntersecting) {
-            if (raf === null) { loop(); }
+            if (raf === null && reveal > 0) { loop(); }
           } else if (raf !== null) {
             window.cancelAnimationFrame(raf);
             raf = null;
@@ -1527,20 +1684,50 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
         });
       }, { threshold: 0 }).observe(canvas);
     }
-
-    start();
   }
 
-  /* ── Boot sequence ────────────────────────────────────── */
-  var boot = document.getElementById("boot");
-  if (boot) {
-    window.requestAnimationFrame(function () {
-      window.requestAnimationFrame(function () { boot.classList.add("is-booted"); });
+  /* ── Intro: a monitor coming to life ────────────────────── */
+  var intro = document.getElementById("intro");
+  var skipBtn = document.getElementById("intro-skip");
+  var timers = [];
+  var revealed = false;
+
+  function later(fn, ms) { timers.push(setTimeout(fn, ms)); }
+
+  function revealPage() {
+    if (revealed) { return; }
+    revealed = true;
+    timers.forEach(clearTimeout);
+    timers = [];
+
+    document.body.classList.add("is-live");
+    if (intro) {
+      intro.classList.add("is-out");
+      setTimeout(function () { intro.classList.add("is-done"); }, 800);
+    }
+    spinUp(function () {});
+    traceStart();
+  }
+
+  if (!intro || reduced) {
+    if (intro) { intro.classList.add("is-done"); }
+    document.body.classList.add("is-live");
+    traceStart();
+  } else {
+    /* flatline draws in, one beat runs through, then the sheet lifts */
+    later(function () { intro.classList.add("is-armed"); }, 120);
+    later(function () { intro.classList.add("is-hushed"); }, 1180);
+    later(revealPage, 1400);
+
+    if (skipBtn) { skipBtn.addEventListener("click", revealPage); }
+    window.addEventListener("keydown", function (e) {
+      if (!revealed && (e.key === "Escape" || e.key === "Enter" || e.key === " ")) { revealPage(); }
     });
   }
 
-  /* ── Scroll reveals ──────────────────────────────────── */
+  /* ── Scroll transitions ─────────────────────────────────── */
   var rises = document.querySelectorAll(".rise");
+
   if (!("IntersectionObserver" in window) || reduced) {
     Array.prototype.forEach.call(rises, function (n) { n.classList.add("is-in"); });
   } else {
@@ -1551,15 +1738,15 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
           io.unobserve(e.target);
         }
       });
-    }, { rootMargin: "0px 0px -12% 0px", threshold: 0.1 });
+    }, { rootMargin: "0px 0px -10% 0px", threshold: 0.1 });
     Array.prototype.forEach.call(rises, function (n) { io.observe(n); });
   }
 
-  /* ── FAQ ─────────────────────────────────────────────── */
+  /* ── FAQ ─────────────────────────────────────────────────── */
   var faq = document.getElementById("faq");
   if (faq) {
     faq.addEventListener("click", function (ev) {
-      var btn = ev.target.closest(".qa__q");
+      var btn = ev.target && ev.target.closest ? ev.target.closest(".qa__q") : null;
       if (!btn) { return; }
       var panel = document.getElementById(btn.getAttribute("aria-controls"));
       var open = btn.getAttribute("aria-expanded") === "true";
